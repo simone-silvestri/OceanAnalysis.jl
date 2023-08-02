@@ -24,7 +24,7 @@ files = []
 for month in 1:12
     for day in monthly_days()[month]
         push!(iters, string(year) * string(month, pad=2) * string(day, pad=2))
-        push!(files, "THETA.1440x720x50." * iters[end] * ".nc")
+        push!(files, "eccodata/THETA.1440x720x50." * iters[end] * ".nc")
     end
 end
 
