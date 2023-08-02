@@ -26,8 +26,14 @@ function calc_mode_water_volume(T, grid, volumes)
     return sum(flag .* volumes)
 end
 
-function load_and_setup_data(file, grid)
-    data = ncread(file, "THETA")[:, :, :, 1]
+function load_and_setup_data(filepath, grid)
+    file = jldopen(filepath)
+    data = file["T"]
+    return arch_array(architecture(grid), data)
+end
+
+function load_and_setup_ecco_data(filepath, grid)
+    data = ncread(filepath, "THETA")[:, :, :, 1]
     data[data .< -1e2] .= 0
     data = reverse(data, dims = 3)
     nx, ny, nz = size(data)

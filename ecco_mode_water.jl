@@ -42,7 +42,7 @@ days       = []
 
 for (file, day) in zip(files, iters)
     @info "doing file $file"
-    T = load_and_setup_data(file, ecco_grid)
+    T = load_and_setup_ecco_data(file, ecco_grid)
     V = calc_mode_water_volume(T, ecco_grid, volumes)
     push!(mode_water, V)
     push!(days, day)
