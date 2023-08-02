@@ -32,7 +32,7 @@ mode_water = []
 days       = [] 
 
 for (file, day) in zip(files, days)
-    T = load_and_setup_data(file, ecco_grid)
+    T = load_and_setup_ecco_data(file, ecco_grid)
     V = calc_mode_water(T, ecco_grid, volumes)
     push!(mode_water, V)
     push!(days, day)
