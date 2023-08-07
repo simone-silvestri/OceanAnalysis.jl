@@ -42,7 +42,7 @@ days       = []
 
 for (idx, iter) in enumerate(iters)
     day  = mod((idx - 1) * 10, 365)
-    file = "compressed_iteration$(iter).jld2"
+    file = "/orcd/nese/raffaele/001/ssilvest/ocean_twelth/compressed_iteration$(iter).jld2"
     @info "doing file $file and day $day"
     T = load_and_setup_data(file, twelth_grid)
     V = calc_mode_water(T, twelth_grid, volumes)
