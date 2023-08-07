@@ -31,8 +31,9 @@ for file in files
         string = file[i] * string
         i -= 1
     end
-    push!(iters, string)
+    push!(iters, parse(Int, string))
 end
+
 iters = sort(iters)
 
 @info "my iterations" files iters
