@@ -57,9 +57,9 @@ function compute_buoyancy_mixed_layer(b, grid; threshold = 0.0003)
     return h
 end
 
-function load_and_setup_data(filepath, grid)
+function load_and_setup_data(filepath, grid, var = "T")
     file = jldopen(filepath)
-    data = file["T"]
+    data = file[var]
     return arch_array(architecture(grid), data)
 end
 
