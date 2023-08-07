@@ -34,7 +34,7 @@ end
         b★ = 0.5 * (b[i, j, k] + b[i, j, k-1]) 
         k  = k-2
         h[i, j] = zero(grid)
-        while abs(b[i, j, k] - b★) < t && !(b[i, j, k] == NaN || b★ == NaN) && k > 1
+        while abs(b[i, j, k] - b★) < t && k > 1
             h[i, j] = znode(i, j, k, grid, Center(), Center(), Center())
             k -= 1
         end
@@ -52,7 +52,6 @@ end
 
 function compute_buoyancy_mixed_layer(b, grid; threshold = 0.0003)
     h = zeros(size(grid, 1), size(grid, 2)) 
-    launch!(architecture(grid), grid, :xyz, _fill_NaNs!, b)
     launch!(architecture(grid), grid, :xy, _compute_mixed_layer!, h, b, grid, threshold)
     return h
 end
