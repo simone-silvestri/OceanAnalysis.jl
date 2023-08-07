@@ -45,7 +45,7 @@ for (idx, iter) in enumerate(iters)
     file = "/orcd/nese/raffaele/001/ssilvest/ocean_twelth/compressed_iteration_$(iter).jld2"
     @info "doing file $file and day $day"
     T = load_and_setup_data(file, twelth_grid)
-    V = calc_mode_water(T, twelth_grid, volumes)
+    V = calc_mode_water_volume(T, twelth_grid, volumes)
     push!(mode_water, V)
     push!(days, day)
 end
