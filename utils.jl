@@ -34,6 +34,7 @@ end
         ρ★ = ρ[i, j, k]
         k  = k-1
         h[i, j] = zero(grid)
+        @show ρ[i, j, k],  ρ★
         while abs(ρ[i, j, k] - ρ★) < t && k > 1
             h[i, j] = znode(i, j, k, grid, Center(), Center(), Center())
             k -= 1

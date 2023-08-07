@@ -15,8 +15,12 @@ twelth_grid = LatitudeLongitudeGrid(arch; size = (4320, 1800, 100),
                                  longitude = (-180, 180),
                                  latitude = (-75, 75),
                                  z = z_faces)
+T = CenterField(twelth_grid)
+S = CenterField(twelth_grid)
 
-volumes = arch_array(arch, interior(VolumeField(twelth_grid)))
+eos = SeawaterPolynomials.TEOS10EquationOfState()
+
+ρ = Field(KernelFunctionOperation{Center, Center, Center}(ρ′, twelth_grid, eos, T, S))
 
 @info "what about files?"
 const regex = r"^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$";
@@ -50,9 +54,9 @@ for (idx, iter) in enumerate(iters)
     set!(T, Td)
     set!(S, Sd)
 
-    compute!(b)
+    compute!(ρ)
 
-    h = compute_buoyancy_mixed_layer(b, ecco_grid)
+    h = compute_buoyancy_mixed_layer(ρ, ecco_grid)
     
     push!(mixed_layer, h)
     push!(days, day)
