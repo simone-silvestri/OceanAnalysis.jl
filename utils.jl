@@ -4,7 +4,7 @@ using Oceananigans.Utils
 using Oceananigans.Architectures: arch_array
 using Oceananigans.Grids: architecture, node
 using KernelAbstractions: @kernel, @index
-using KernelAbstractions.Extras.Loopinfo: @unroll
+using KernelAbstractions.Extras.LoopInfo: @unroll
 using Oceananigans.AbstractOperations: GridMetricOperation
 using NetCDF
 using CUDA
