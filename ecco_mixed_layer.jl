@@ -31,7 +31,7 @@ all_Sfiles = []
 @info "what about files?"
 for month in 1:12
     for day in monthly_days()[month]
-        push!(all_iters, string(year) * string(month, pad=2) * string(day, pad=2))
+        push!(all_iters, string(1995) * string(month, pad=2) * string(day, pad=2))
         push!(all_Tfiles, "eccodata/THETA.1440x720x50." * all_iters[end] * ".nc")
         push!(all_Sfiles, "eccodata/SALT.1440x720x50." * all_iters[end] * ".nc")
     end
