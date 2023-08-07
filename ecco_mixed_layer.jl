@@ -47,7 +47,7 @@ mixed_layer = []
 days        = [] 
 
 for (Tfile, Sfile, day) in zip(Tfiles, Sfiles, iters)
-    @info "doing file $file"
+    @info "doing files $Tfile $Sfile"
     Td = load_and_setup_ecco_data(Tfile, ecco_grid)
     Sd = load_and_setup_ecco_data(Sfile, ecco_grid)
     
