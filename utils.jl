@@ -53,7 +53,7 @@ end
 function compute_buoyancy_mixed_layer(b, grid; threshold = 0.0003)
     h = zeros(size(grid, 1), size(grid, 2)) 
     launch!(architecture(grid), grid, :xyz, _fill_NaNs!, b)
-    launch!(architecture(grid), grid, :xy, _compute_mixed_layer!, h, grid, b, threshold)
+    launch!(architecture(grid), grid, :xy, _compute_mixed_layer!, h, b, grid, threshold)
     return h
 end
 
