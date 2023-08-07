@@ -63,8 +63,8 @@ function load_and_setup_data(filepath, grid)
     return arch_array(architecture(grid), data)
 end
 
-function load_and_setup_ecco_data(filepath, grid)
-    data = ncread(filepath, "THETA")[:, :, :, 1]
+function load_and_setup_ecco_data(filepath, grid, var = "THETA")
+    data = ncread(filepath, var)[:, :, :, 1]
     data[data .< -1e2] .= 0
     data = reverse(data, dims = 3)
     nx, ny, nz = size(data)

@@ -41,15 +41,15 @@ iters  = [all_iters[i]  for i in 1:3:length(all_iters)]
 Tfiles = [all_Tfiles[i] for i in 1:3:length(all_Tfiles)]
 Sfiles = [all_Sfiles[i] for i in 1:3:length(all_Sfiles)]
 
-@info "my iterations" files iters
+@info "my iterations" Tfiles Sfiles iters
 
 mixed_layer = []
 days        = [] 
 
 for (Tfile, Sfile, day) in zip(Tfiles, Sfiles, iters)
     @info "doing files $Tfile $Sfile"
-    Td = load_and_setup_ecco_data(Tfile, ecco_grid)
-    Sd = load_and_setup_ecco_data(Sfile, ecco_grid)
+    Td = load_and_setup_ecco_data(Tfile, ecco_grid, "THETA")
+    Sd = load_and_setup_ecco_data(Sfile, ecco_grid, "SALT")
     
     set!(T, Td)
     set!(S, Sd)
