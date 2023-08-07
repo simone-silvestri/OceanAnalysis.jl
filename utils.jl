@@ -4,6 +4,7 @@ using Oceananigans.Utils
 using Oceananigans.Architectures: arch_array
 using Oceananigans.Grids: architecture, node
 using KernelAbstractions: @kernel, @index
+using KernelAbstractions.Extras.Loopinfo: @unroll
 using Oceananigans.AbstractOperations: GridMetricOperation
 using NetCDF
 using CUDA
@@ -11,7 +12,7 @@ using CUDA
 MetricField(loc, grid, metric) = compute!(Field(GridMetricOperation(loc, metric, grid)))
 VolumeField(grid, loc = (Center, Center, Center)) = MetricField(loc, grid, Oceananigans.AbstractOperations.volume)
 
-@kernel function _flag_volumes(flag, T, grid)
+@kernel function _flag_volumes!(flag, T, grid)
     i, j, k = @index(Global, NTuple)
     λ, φ, _ = node(i, j, k, grid, Center(), Center(), Center())
 
@@ -22,8 +23,38 @@ end
 
 function calc_mode_water_volume(T, grid, volumes)
     flag = arch_array(architecture(grid), zeros(size(T)...))
-    launch!(architecture(grid), grid, :xyz, _flag_volumes, flag, T, grid)
+    launch!(architecture(grid), grid, :xyz, _flag_volumes!, flag, T, grid)
     return sum(flag .* volumes)
+end
+
+@kernel function _compute_mixed_layer!(h, b, grid, t)
+    i, j = @index(Global, NTuple)
+    k    = grid.Nz
+    @inbounds begin    
+        b★ = 0.5 * (b[i, j, k] + b[i, j, k-1]) 
+        k  = k-2
+        h[i, j] = zero(grid)
+        while abs(b[i, j, k] - b★) < t && !(b[i, j, k] == NaN || b★ == NaN) && k > 1
+            h[i, j] = znode(i, j, k, grid, Center(), Center(), Center())
+            k -= 1
+        end
+    end
+end
+
+@kernel function _fill_NaNs!(b)
+    i, j, k = @index(Global, NTuple)
+    @inbounds begin
+        if b[i, j, k] == 0
+            b[i, j, k] = NaN
+        end
+    end
+end
+
+function compute_buoyancy_mixed_layer(b, grid; threshold = 0.0003)
+    h = zeros(size(grid, 1), size(grid, 2)) 
+    launch!(architecture(grid), grid, :xyz, _fill_NaNs!, b)
+    launch!(architecture(grid), grid, :xy, _compute_mixed_layer!, h, grid, b, threshold)
+    return h
 end
 
 function load_and_setup_data(filepath, grid)
