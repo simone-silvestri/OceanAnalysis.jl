@@ -29,12 +29,11 @@ end
 
 @kernel function _compute_mixed_layer!(h, ρ, grid, t)
     i, j = @index(Global, NTuple)
-    k    = grid.Nz
+    k    = grid.Nz - 1
     @inbounds begin    
         ρ★ = ρ[i, j, k]
         k  = k-1
         h[i, j] = zero(grid)
-        @show abs(ρ[i, j, k] - ρ★) t
         while abs(ρ[i, j, k] - ρ★) < t && k > 1
             h[i, j] = znode(i, j, k, grid, Center(), Center(), Center())
             k -= 1

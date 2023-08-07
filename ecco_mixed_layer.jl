@@ -19,7 +19,7 @@ S = CenterField(ecco_grid)
 
 eos = SeawaterPolynomials.TEOS10EquationOfState()
 
-ρ = Field(KernelFunctionOperation{Center, Center, Center}(ρ′, ecco_grid, eos, T, S))
+ρ = Field(KernelFunctionOperation{Center, Center, Center}(ρ′, ecco_grid, eos, T, S) + eos.reference_density)
 
 monthly_days() = [1:31, 1:28, 1:31, 1:30, 1:31, 1:30, 1:31, 1:31, 1:30, 1:31, 1:30, 1:31]
 
