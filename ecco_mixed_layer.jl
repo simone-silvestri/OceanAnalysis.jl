@@ -20,7 +20,7 @@ S = CenterField(ecco_grid)
 equation_of_state = SeawaterPolynomials.TEOS10EquationOfState()
 buoyancy = SeawaterBuoyancy(; equation_of_state)
 
-b = Field(KernelFunctionOperation{Center, Center, Center}(buoyancy_perturbationᶜᶜᶜ, grid, buoyancy, (; T, S)))
+b = Field(KernelFunctionOperation{Center, Center, Center}(buoyancy_perturbationᶜᶜᶜ, ecco_grid, buoyancy, (; T, S)))
 
 monthly_days() = [1:31, 1:28, 1:31, 1:30, 1:31, 1:30, 1:31, 1:31, 1:30, 1:31, 1:30, 1:31]
 
@@ -56,7 +56,7 @@ for (Tfile, Sfile, day) in zip(Tfiles, Sfiles, iters)
 
     compute!(b)
 
-    h = compute_buoyancy_mixed_layer(b, grid)
+    h = compute_buoyancy_mixed_layer(b, ecco_grid)
     
     push!(mixed_layer, h)
     push!(days, day)
