@@ -41,7 +41,7 @@ end
     end
 end
 
-function compute_buoyancy_mixed_layer(ρ, grid; threshold = 0.03)
+function compute_buoyancy_mixed_layer(ρ, grid; threshold = 0.06)
     h = zeros(size(grid, 1), size(grid, 2)) 
     launch!(architecture(grid), grid, :xy, _compute_mixed_layer!, h, ρ, grid, threshold)
     return h
