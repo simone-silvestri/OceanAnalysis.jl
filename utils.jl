@@ -27,32 +27,23 @@ function calc_mode_water_volume(T, grid, volumes)
     return sum(flag .* volumes)
 end
 
-@kernel function _compute_mixed_layer!(h, b, grid, t)
+@kernel function _compute_mixed_layer!(h, ρ, grid, t)
     i, j = @index(Global, NTuple)
     k    = grid.Nz
     @inbounds begin    
-        b★ = 0.5 * (b[i, j, k] + b[i, j, k-1]) 
-        k  = k-2
+        ρ★ = ρ[i, j, k]
+        k  = k-1
         h[i, j] = zero(grid)
-        while abs(b[i, j, k] - b★) < t && k > 1
+        while abs(ρ[i, j, k] - ρ★) < t && k > 1
             h[i, j] = znode(i, j, k, grid, Center(), Center(), Center())
             k -= 1
         end
     end
 end
 
-@kernel function _fill_NaNs!(b)
-    i, j, k = @index(Global, NTuple)
-    @inbounds begin
-        if b[i, j, k] == 0
-            b[i, j, k] = NaN
-        end
-    end
-end
-
-function compute_buoyancy_mixed_layer(b, grid; threshold = 0.0003)
+function compute_buoyancy_mixed_layer(ρ, grid; threshold = 0.03)
     h = zeros(size(grid, 1), size(grid, 2)) 
-    launch!(architecture(grid), grid, :xy, _compute_mixed_layer!, h, b, grid, threshold)
+    launch!(architecture(grid), grid, :xy, _compute_mixed_layer!, h, ρ, grid, threshold)
     return h
 end
 
