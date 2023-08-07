@@ -2,7 +2,7 @@ using JLD2
 using Oceananigans
 using Oceananigans.Utils
 using Oceananigans.Architectures: arch_array
-using Oceananigans.Grids: architecture, node
+using Oceananigans.Grids: architecture, node, znode
 using KernelAbstractions: @kernel, @index
 using KernelAbstractions.Extras.LoopInfo: @unroll
 using Oceananigans.AbstractOperations: GridMetricOperation
