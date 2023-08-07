@@ -58,7 +58,7 @@ for (Tfile, Sfile, day) in zip(Tfiles, Sfiles, iters)
     @info "extrema of b" extrema(b)
 
     h = compute_buoyancy_mixed_layer(b, ecco_grid)
-    
+    @info "extrema of h" extrema(h)
     push!(mixed_layer, h)
     push!(days, day)
 end
