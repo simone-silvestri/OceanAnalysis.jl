@@ -56,7 +56,7 @@ for (idx, iter) in enumerate(iters)
 
     compute!(ρ)
 
-    h = compute_buoyancy_mixed_layer(ρ, ecco_grid)
+    h = compute_buoyancy_mixed_layer(ρ, twelth_grid)
     
     push!(mixed_layer, h)
     push!(days, day)
