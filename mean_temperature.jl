@@ -16,6 +16,7 @@ bathymetry = jldopen("bathymetry12.jld2")["bathymetry"]
 grid = ImmersedBoundaryGrid(twelth_grid, GridFittedBottom(bathymetry))
 
 T = CenterField(grid)
+η = Field((Center, Center, Nothing), grid)
 
 tm = mean(T, dims = 1)
 fill!(tm, 0.0)
@@ -29,6 +30,7 @@ for (idx, iter) in enumerate(iters)
     @info "doing file $file and day $day"
     set!(T, file["T"])
     tm .+= mean(T, dims = 1) ./ length(iters)
+    η .+= file["η"] ./ length(iters)
 end
 
-jldsave("mean_temperature.jld2", Tm = tm)
+jldsave("mean_temperature.jld2", Tm = tm, ηm = η)
