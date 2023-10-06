@@ -17,6 +17,7 @@ grid = ImmersedBoundaryGrid(twelth_grid, GridFittedBottom(bathymetry))
 
 T = CenterField(grid)
 η = Field((Center, Center, Nothing), grid)
+vol = VolumeField(grid)
 
 tm = mean(T, dims = 1)
 fill!(tm, 0.0)
@@ -27,10 +28,10 @@ files, iters = get_iters(folder)
 
 for (idx, iter) in enumerate(iters)
     file = folder * "compressed_iteration_$(iter).jld2"
-    @info "doing file $file and day $day"
-    set!(T, file["T"])
-    tm .+= mean(T, dims = 1) ./ length(iters)
-    η .+= file["η"] ./ length(iters)
+    @info "doing file $file and iter $iter"
+    set!(T, jldopen(file)["T"])
+    tm .+= sum(T * vol, dims = 1) ./ length(iters)
+     η .+= file["η"] ./ length(iters)
 end
 
-jldsave("mean_temperature.jld2", Tm = tm, ηm = η)
+jldsave("mean_temp.jld2", Tm = tm, ηm = η)
