@@ -72,3 +72,23 @@ function transpose_flux!(var, tmp)
 
     return nothing
 end
+
+function get_iters(directory)
+    @info "what about files?"
+    const regex = r"^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$";
+    files = readdir(directory)
+    files = filter(x -> x[1:10] == "compressed", files)
+    iters = []
+    for file in files
+        file   = file[1:end-5]
+        string = ""
+        i = length(file)
+        while occursin(regex, "$(file[i])")
+            string = file[i] * string
+            i -= 1
+        end
+        push!(iters, parse(Int, string))
+    end
+    iters = sort(iters)
+    return files, iters
+end
